@@ -39,11 +39,12 @@ class Car:
 
     def __sub__(self, other):
         return (
-            self.buying - other.buying,
-            self.maint - other.maint,
-            self.doors - other.doors,
-            self.lugboot - other.lugboot,
-            self.safety - other.safety
+            (self.buying - other.buying),
+            (self.maint - other.maint),
+            (self.doors - other.doors),
+            (self.persons - other.persons),
+            (self.lugboot - other.lugboot),
+            (self.safety - other.safety)
         )
 
 
@@ -53,7 +54,7 @@ class Car:
 
     @buying.setter
     def buying(self, value):
-        self.__buying = ["vhigh", "high", "med", "low"].index(value)
+        self.__buying = ["low", "med", "high", "vhigh"].index(value) + 1
 
     @property
     def maint(self):
@@ -61,7 +62,7 @@ class Car:
 
     @maint.setter
     def maint(self, value):
-        self.__maint = ["vhigh", "high", "med", "low"].index(value)
+        self.__maint = ["low", "med", "high", "vhigh"].index(value) + 1
 
     @property
     def doors(self):
@@ -69,7 +70,7 @@ class Car:
 
     @doors.setter
     def doors(self, value):
-        self.__doors = ["2", "3", "4", "5more"].index(value)
+        self.__doors = ["2", "3", "4", "5more"].index(value) + 1
 
     @property
     def persons(self):
@@ -77,7 +78,7 @@ class Car:
 
     @persons.setter
     def persons(self, value):
-        self.__persons = ["2", "4", "more"].index(value)
+        self.__persons = ["2", "4", "6", "more"].index(value) + 1
 
     @property
     def lugboot(self):
@@ -85,7 +86,7 @@ class Car:
 
     @lugboot.setter
     def lugboot(self, value):
-        self.__lugboot = ["small", "med", "big"].index(value)
+        self.__lugboot = ["tiny", "small", "med", "big"].index(value) + 1
 
     @property
     def safety(self):
@@ -93,4 +94,4 @@ class Car:
 
     @safety.setter
     def safety(self, value):
-        self.__safety = ["low", "med", "high"].index(value)
+        self.__safety = ["vlow", "low", "med", "high"].index(value) + 1

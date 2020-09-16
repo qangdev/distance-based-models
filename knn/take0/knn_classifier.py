@@ -1,4 +1,4 @@
-from .utils import yieldloop
+from knn.take0.utils import yieldloop
 
 
 class KNN:
@@ -26,8 +26,9 @@ class KNN:
             if value not in counting:
                 counting[value] = 0
             counting[value] += 1
-        counting = sorted(counting.items(), key=lambda o: o[1])
-        return next(iter(counting))[0]
+        counting = sorted(counting.items(), key=lambda item: item[1])
+        winner = counting.pop()
+        return winner[0]
 
 
     def find_k_nearest(self, point):
@@ -43,10 +44,13 @@ class KNN:
 
 
     def predict_one(self, record):
+        # Calculate the test data distance foreach data in each class using the Euclidean distance
         k_near_points = self.find_k_nearest(record)
+        # Sort the distance between data from the smallest to the largest according to number of k
         winning_value = self.voting(k_near_points, "klass")
         record.klass = winning_value
-        self.labeled_data.append(record)
+        # # Add more to train data
+        # self.labeled_data.append(record)
         return record
 
 

@@ -1,13 +1,15 @@
 import csv
 import time
+import pandas as pd
 
 from random import sample
-from take0.knn import KNN
-from take0.car import Car
+from knn.take0.knn_classifier import KNN
+from knn.take0.car import Car
 
 # Step 1: Loading and prepare data
+print("[Started]")
 data_train, data_test = [], []
-with open("./data/car.data", "r") as car_data:
+with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as car_csv:
     lines = list(csv.reader(car_data, delimiter=","))
     # lines = sample(lines, k=len(lines))
     percent = round(len(lines) * 0.2)
@@ -23,7 +25,14 @@ with open("./data/car.data", "r") as car_data:
         row.safety = line[5]
         row.klass = line[6]
         rows.append(row)
-    data_train = sample(rows.copy(), percent) #rows.copy()[:percent]
+        car_csv.write(",".join([str(row.buying),
+                                str(row.maint),
+                                str(row.doors),
+                                str(row.persons),
+                                str(row.lugboot),
+                                str(row.safety)])+"\n")
+    # TODO: How to get smaple better???
+    data_train = sample(rows.copy(), percent)  # rows.copy()[:percent]
     lables_test = []
     for o in rows.copy():
         row = o.clone()
@@ -35,16 +44,24 @@ knn = KNN(k=5)
 knn.training(data_train)
 start_time = time.time()
 result = knn.predict_many(data_test)
-print(":> %s - Done" % (time.time() - start_time))
-print("%s vs %s vs %s" % (len(result), len(data_test), len(lables_test)))
+result = [o.klass for o in result]
+print(":> %s - [DONE]" % (time.time() - start_time))
+
+predicted = pd.Series(result, name="Predicted")
+actual = pd.Series(lables_test, name="Actual")
+df_confusion = pd.crosstab(predicted, actual)
+print(df_confusion)
+
 # Step 3: Validate accuracy
 match = 0
 not_match = 0
 for o in zip(result, lables_test):
-    if o[0].klass == o[1]:
+    if o[0] == o[1]:
         match += 1
     else:
+        print("%s >< %s" % (o[0], o[1]))
         not_match += 1
+
 print("[MATCH] %s" % match)
 print("[NOT-MATCH] %s" % not_match)
 print("[TOTAL] %s - %s" % (match/len(result), len(result)))
