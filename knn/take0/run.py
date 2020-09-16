@@ -2,7 +2,7 @@ import csv
 import time
 import pandas as pd
 
-from random import sample
+from random import sample, randrange
 from knn.take0.knn_classifier import KNN
 from knn.take0.car import Car
 
@@ -11,7 +11,6 @@ print("[Started]")
 data_train, data_test = [], []
 with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as car_csv:
     lines = list(csv.reader(car_data, delimiter=","))
-    # lines = sample(lines, k=len(lines))
     percent = round(len(lines) * 0.2)
     rows = []
     labels = []
@@ -34,7 +33,9 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
     # TODO: How to get smaple better???
     data_train = sample(rows.copy(), percent)  # rows.copy()[:percent]
     lables_test = []
-    for o in rows.copy():
+    # t1 = [L.pop(random.randrange(len(L))) for _ in xrange(2)]
+    rows_2 = rows.copy()
+    for o in [rows_2.pop(randrange(len(rows_2))) for _ in range(0, len(rows) - len(data_train))]:
         row = o.clone()
         lables_test.append(o.klass)
         data_test.append(row)
@@ -59,9 +60,9 @@ for o in zip(result, lables_test):
     if o[0] == o[1]:
         match += 1
     else:
-        print("%s >< %s" % (o[0], o[1]))
         not_match += 1
 
+print("[TRAIN] %s vs [TEST]: %s" %(len(data_train), len(data_test)))
 print("[MATCH] %s" % match)
 print("[NOT-MATCH] %s" % not_match)
-print("[TOTAL] %s - %s" % (match/len(result), len(result)))
+print("[TOTAL] %s - %s" % (match/len(result), len(data_train) + len(data_test)))

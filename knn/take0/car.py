@@ -95,3 +95,14 @@ class Car:
     @safety.setter
     def safety(self, value):
         self.__safety = ["vlow", "low", "med", "high"].index(value) + 1
+
+    @property
+    def klass(self):
+        return self.__klass
+
+    @klass.setter
+    def klass(self, value):
+        if type(value) is str:
+            self.__klass = ["unacc", "acc", "good", "vgood"].index(value) + 1
+        else:
+            self.__klass = value
