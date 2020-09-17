@@ -12,20 +12,20 @@ from .utils import yieldloop
 class Car:
 
     def __init__(self,
-                 buying: int = None,
-                 maint: int = None,
-                 doors: int = None,
-                 persons: int = None,
-                 lugboot: int = None,
-                 safety: int = None,
-                 klass: int = None):
-        self.__buying = buying
-        self.__maint = maint
-        self.__doors = doors
-        self.__persons = persons
-        self.__lugboot = lugboot
-        self.__safety = safety
-        self.__klass = klass
+                 buying: str = None,
+                 maint: str = None,
+                 doors: str = None,
+                 persons: str = None,
+                 lugboot: str = None,
+                 safety: str = None,
+                 klass: str = None):
+        self.buying = ["low", "med", "high", "vhigh"].index(buying)
+        self.maint = ["low", "med", "high", "vhigh"].index(maint)
+        self.doors = ["2", "3", "4", "5more"].index(doors)
+        self.persons = ["2", "4", "6", "more"].index(persons)
+        self.lugboot = ["tiny", "small", "med", "big"].index(lugboot)
+        self.safety = ["vlow", "low", "med", "high"].index(safety)
+        self.klass = ["unacc", "acc", "good", "vgood"].index(klass)
 
 
     def clone(self):
@@ -39,70 +39,10 @@ class Car:
 
     def __sub__(self, other):
         return (
-            (self.buying - other.buying),
-            (self.maint - other.maint),
-            (self.doors - other.doors),
-            (self.persons - other.persons),
-            (self.lugboot - other.lugboot),
-            (self.safety - other.safety)
+            ((self.buying - other.buying)**2)*0.8,
+            ((self.maint - other.maint)**2)*0.8,
+            ((self.doors - other.doors)**2),
+            ((self.persons - other.persons)**2),
+            ((self.lugboot - other.lugboot)**2),
+            ((self.safety - other.safety)**2)*0.9
         )
-
-
-    @property
-    def buying(self):
-        return self.__buying
-
-    @buying.setter
-    def buying(self, value):
-        self.__buying = ["low", "med", "high", "vhigh"].index(value) + 1
-
-    @property
-    def maint(self):
-        return self.__maint
-
-    @maint.setter
-    def maint(self, value):
-        self.__maint = ["low", "med", "high", "vhigh"].index(value) + 1
-
-    @property
-    def doors(self):
-        return self.__doors
-
-    @doors.setter
-    def doors(self, value):
-        self.__doors = ["2", "3", "4", "5more"].index(value) + 1
-
-    @property
-    def persons(self):
-        return self.__persons
-
-    @persons.setter
-    def persons(self, value):
-        self.__persons = ["2", "4", "6", "more"].index(value) + 1
-
-    @property
-    def lugboot(self):
-        return self.__lugboot
-
-    @lugboot.setter
-    def lugboot(self, value):
-        self.__lugboot = ["tiny", "small", "med", "big"].index(value) + 1
-
-    @property
-    def safety(self):
-        return self.__safety
-
-    @safety.setter
-    def safety(self, value):
-        self.__safety = ["vlow", "low", "med", "high"].index(value) + 1
-
-    @property
-    def klass(self):
-        return self.__klass
-
-    @klass.setter
-    def klass(self, value):
-        if type(value) is str:
-            self.__klass = ["unacc", "acc", "good", "vgood"].index(value) + 1
-        else:
-            self.__klass = value

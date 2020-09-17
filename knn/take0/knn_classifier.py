@@ -15,7 +15,7 @@ class KNN:
 
     def euclidean_distance(self, point_x, point_y):
         from math import sqrt
-        distances = sum([o**2 for o in point_x - point_y])
+        distances = sum(point_x - point_y)
         return sqrt(distances)
 
 
@@ -30,6 +30,7 @@ class KNN:
         winner = counting.pop()
         return winner[0]
 
+    # How many False Negative
 
     def find_k_nearest(self, point):
         records = {}

@@ -9,35 +9,17 @@ from knn.take0.knn_classifier import KNN
 from knn.take0.car import Car
 
 
-def prepare_data(kfold, lines):
+def prepare_data(data, kfold):
     # Step 1: Loading and prepare data
-    data = []
-    for train_index, test_index in kfold.split(lines):
+    for train_index, test_index in kfold.split(data):
         data_train, data_test, label_test = [], [], []
         for index in list(train_index):
-            line = lines[index]
-            row = Car()  # Make Row instance and clear data
-            row.buying = line[0]
-            row.maint = line[1]
-            row.doors = line[2]
-            row.persons = line[3]
-            row.lugboot = line[4]
-            row.safety = line[5]
-            row.klass = line[6]
-            data_train.append(row)
+            data_train.append(data[index])
         for index in list(test_index):
-            line = lines[index]
-            row = Car()  # Make Row instance and clear data
-            row.buying = line[0]
-            row.maint = line[1]
-            row.doors = line[2]
-            row.persons = line[3]
-            row.lugboot = line[4]
-            row.safety = line[5]
-            data_test.append(row)
-            label_test.append(line[6])
-        data.append([data_train, data_test, label_test])
-    return data
+            label_test.append(data[index].klass)
+            data[index].klass = None
+            data_test.append(data[index])
+        yield [data_train, data_test, label_test]
 
 
 def run_knn(k, data_train, data_test):
@@ -54,6 +36,17 @@ def run_knn(k, data_train, data_test):
 if __name__ == '__main__':
     with open("./data/car.data", "r") as car_data:
         lines = list(csv.reader(car_data, delimiter=","))
+        data = []
+        for line in lines:
+            # Make Row instance and clear data
+            row = Car(buying=line[0],
+                      maint=line[1],
+                      doors=line[2],
+                      persons=line[3],
+                      lugboot=line[4],
+                      safety=line[5],
+                      klass=line[6])
+            data.append(row)
 
         kf3 = KFold(n_splits=3, shuffle=False)
         kf5 = KFold(n_splits=5, shuffle=False)
@@ -63,7 +56,8 @@ if __name__ == '__main__':
         skf4 = KFold(n_splits=4, shuffle=True)
         skf5 = KFold(n_splits=5, shuffle=True)
 
-        for data_train, data_test, label_test in prepare_data(kfold=skf4, lines=lines):
+        for data_train, data_test, label_test in prepare_data(data=data,
+                                                              kfold=skf5):
             result = run_knn(k=5,
                              data_test=data_test,
                              data_train=data_train)
@@ -81,7 +75,6 @@ if __name__ == '__main__':
                 else:
                     not_match += 1
             print("[TRAIN] %s vs [TEST]: %s" % (len(data_train), len(data_test)))
-            print("[MATCH] %s" % match)
-            print("[NOT-MATCH] %s" % not_match)
+            print("[MATCH] %s vs [NOT-MATCH] % s" % (match, not_match))
             print("[TOTAL] %s - %s" % (match/len(result), len(result)))
             print("#"*50)
