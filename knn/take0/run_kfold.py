@@ -10,11 +10,12 @@ from knn.take0.car import Car
 
 
 def prepare_data(data, kfold):
-    # Step 1: Loading and prepare data
     for train_index, test_index in kfold.split(data):
         data_train, data_test, label_test = [], [], []
+
         for index in list(train_index):
             data_train.append(data[index])
+
         for index in list(test_index):
             label_test.append(data[index].klass)
             data[index].klass = None
@@ -23,7 +24,6 @@ def prepare_data(data, kfold):
 
 
 def run_knn(k, data_train, data_test):
-    # Step 2: Training KNN and Labling data
     knn = KNN(k=k)
     knn.training(data_train)
     start_time = time.time()
@@ -33,12 +33,15 @@ def run_knn(k, data_train, data_test):
 
     return result
 
+
+
 if __name__ == '__main__':
     with open("./data/car.data", "r") as car_data:
         lines = list(csv.reader(car_data, delimiter=","))
+        # Step 1: Loading and prepare data
         data = []
         for line in lines:
-            # Make Row instance and clear data
+            # Make Row instance and clean data
             row = Car(buying=line[0],
                       maint=line[1],
                       doors=line[2],
@@ -58,15 +61,17 @@ if __name__ == '__main__':
 
         for data_train, data_test, label_test in prepare_data(data=data,
                                                               kfold=skf5):
+            # Step 2: Training KNN and Labeling test data
             result = run_knn(k=7,
                              data_test=data_test,
                              data_train=data_train)
+
+            # Step 3: Validate accuracy and make Confusion Matrix
             predicted = pd.Series(result, name="Predicted")
             actual = pd.Series(label_test, name="Actual")
             df_confusion = pd.crosstab(predicted, actual)
             print(df_confusion)
 
-            # Step 3: Validate accuracy
             match = 0
             not_match = 0
             for o in zip(result, label_test):

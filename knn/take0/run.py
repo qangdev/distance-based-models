@@ -6,13 +6,12 @@ from random import sample
 from knn.take0.knn_classifier import KNN
 from knn.take0.car import Car
 
+
 # Step 1: Loading and prepare data
 print("[STARTED]")
 data_train, data_test = [], []
 with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as car_csv:
     lines = list(csv.reader(car_data, delimiter=","))
-    break_point = round(len(lines) * 0.2)
-
     data = []
     for line in lines:
         # Make Row instance and clean data
@@ -24,6 +23,7 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
                   safety=line[5],
                   klass=line[6])
         data.append(row)
+        # Save converted data to a file for checking Correlation
         car_csv.write(",".join([str(row.buying),
                                 str(row.maint),
                                 str(row.doors),
@@ -31,7 +31,8 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
                                 str(row.lugboot),
                                 str(row.safety),
                                 str(row.klass)])+"\n")
-    
+
+    break_point = round(len(lines) * 0.2)
     data = sample(data, k=len(data))
     data_train = data[:break_point]
     labels_test = []
@@ -40,21 +41,24 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
         o.klass = None
         data_test.append(o)
 
-# Step 2: Training KNN and Labling data
+
+# Step 2: Training KNN and Labeling test data
 knn = KNN(k=5)
 knn.training(data_train)
+
 start_time = time.time()
 result = knn.predict_many(data_test)
 result = [o.klass for o in result]
+
 print(":> %s - [DONE]" % (time.time() - start_time))
 
+
+# Step 3: Validate accuracy, make Confusion Matrix
 predicted = pd.Series(result, name="Predicted")
 actual = pd.Series(labels_test, name="Actual")
 df_confusion = pd.crosstab(predicted, actual)
-
 print(df_confusion)
 
-# Step 3: Validate accuracy
 match = 0
 not_match = 0
 for o in zip(result, labels_test):

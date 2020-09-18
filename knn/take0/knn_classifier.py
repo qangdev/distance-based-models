@@ -1,8 +1,10 @@
 from knn.take0.utils import yieldloop
+from math import sqrt
 
 
 class KNN:
     K = 3
+
 
     def __init__(self, k):
         self.k = k
@@ -14,15 +16,16 @@ class KNN:
 
 
     def euclidean_distance(self, point_x, point_y):
-        from math import sqrt
-        distances = sum(point_x - point_y)
-        return sqrt(distances)
+        # point x: e.g [0,1,2,3,4,5]
+        # point y: e.g [0,1,2,3,4,5]
+        # How `point_x - point_y` is defined in Car class (`__sub__` magic method)
+        return sqrt(sum(point_x - point_y))
 
 
     def voting(self, records, column):
         counting = {}
         for o in records:
-            value = getattr(o, column)
+            value = getattr(o, column) # Access to the given column
             if value not in counting:
                 counting[value] = 0
             counting[value] += 1
@@ -34,9 +37,10 @@ class KNN:
     def find_k_nearest(self, point):
         records = {}
         for i, o in enumerate(yieldloop(self.labeled_data)):
-            distance = self.euclidean_distance(point, o)
-            records[i] = distance
-        # Sorted
+            # Keep the index of train data set to get the label later
+            records[i] = self.euclidean_distance(point, o)
+
+        # Sort the distances ascending
         records = sorted(records.items(), key=lambda o: o[1])
         records = records[:self.k]
         records = [self.labeled_data[o[0]] for o in records]
