@@ -15,7 +15,7 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
 
     data = []
     for line in lines:
-        # Make Row instance and clear data
+        # Make Row instance and clean data
         row = Car(buying=line[0],
                   maint=line[1],
                   doors=line[2],
@@ -29,7 +29,8 @@ with open("./data/car.data", "r") as car_data, open("./data/car.csv", "w+") as c
                                 str(row.doors),
                                 str(row.persons),
                                 str(row.lugboot),
-                                str(row.safety)])+"\n")
+                                str(row.safety),
+                                str(row.klass)])+"\n")
     
     data = sample(data, k=len(data))
     data_train = data[:break_point]
@@ -50,6 +51,7 @@ print(":> %s - [DONE]" % (time.time() - start_time))
 predicted = pd.Series(result, name="Predicted")
 actual = pd.Series(labels_test, name="Actual")
 df_confusion = pd.crosstab(predicted, actual)
+
 print(df_confusion)
 
 # Step 3: Validate accuracy

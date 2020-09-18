@@ -3,7 +3,7 @@ import time
 import pandas as pd
 import numpy as np
 
-from random import sample
+
 from sklearn.model_selection import KFold
 from knn.take0.knn_classifier import KNN
 from knn.take0.car import Car
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
         for data_train, data_test, label_test in prepare_data(data=data,
                                                               kfold=skf5):
-            result = run_knn(k=5,
+            result = run_knn(k=7,
                              data_test=data_test,
                              data_train=data_train)
             predicted = pd.Series(result, name="Predicted")

@@ -39,10 +39,10 @@ class Car:
 
     def __sub__(self, other):
         return (
-            ((self.buying - other.buying)**2)*0.8,
-            ((self.maint - other.maint)**2)*0.8,
+            ((self.buying - other.buying)**2),
+            ((self.maint - other.maint)**2),
             ((self.doors - other.doors)**2),
             ((self.persons - other.persons)**2),
             ((self.lugboot - other.lugboot)**2),
-            ((self.safety - other.safety)**2)*0.9
+            ((self.safety - other.safety)**2)
         )

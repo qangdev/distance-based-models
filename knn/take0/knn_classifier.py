@@ -30,7 +30,6 @@ class KNN:
         winner = counting.pop()
         return winner[0]
 
-    # How many False Negative
 
     def find_k_nearest(self, point):
         records = {}
@@ -50,8 +49,6 @@ class KNN:
         # Sort the distance between data from the smallest to the largest according to number of k
         winning_value = self.voting(k_near_points, "klass")
         record.klass = winning_value
-        # # Add more to train data
-        # self.labeled_data.append(record)
         return record
 
 
