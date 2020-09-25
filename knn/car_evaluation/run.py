@@ -3,8 +3,8 @@ import time
 import pandas as pd
 
 from random import sample
-from knn.take0.knn_classifier import KNN
-from knn.take0.car import Car
+from knn.car_evaluation.knn_classifier import KNN
+from knn.car_evaluation.car import Car
 
 
 # Step 1: Loading and prepare data

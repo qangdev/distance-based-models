@@ -5,8 +5,8 @@ import numpy as np
 
 
 from sklearn.model_selection import KFold
-from knn.take0.knn_classifier import KNN
-from knn.take0.car import Car
+from knn.car_evaluation.knn_classifier import KNN
+from knn.car_evaluation.car import Car
 
 
 def prepare_data(data, kfold):

@@ -1,4 +1,4 @@
-from knn.take0.utils import yieldloop
+from knn.car_evaluation.utils import yieldloop
 from math import sqrt
 
 
